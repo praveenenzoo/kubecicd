@@ -1,0 +1,247 @@
+366  vi .bashrc 
+  367  ip a
+  368  ssh root@192.168.10.250
+  369  ip a
+  370  kubectl get nodes
+  371  kubectl create deployment praveenkum --image=192.168.10.160:5000/nginx
+  372  kubectl get deployment
+  373  kubectl get nodes
+  374  kubectl get svc
+  375  kubectl get deployment
+  376  kubectl get deployment -o wide
+  377  kubectl get deployment | grep praveenkum
+  378  kubectl get deployment -o wide | grep praveenkum
+  379  kubectl get pods -o wide | grep praveenkum
+  380  curl 172.1624.1.39
+  381  cd /opt/
+  382  mkdir praveen
+  383  cd praveen/
+  384  ls
+  385  touch abc.html
+  386  touch Dockerfile
+  387  history
+  388  docker ps
+  389  service docker restart
+  390  docker ps
+  391  chkconfig docker on
+  392  docker --v
+  393  docker --version
+  394  ls
+  395  vim /etc/docker/daemon.json 
+  396  systemctl demon-reload
+  397  systemctl deamon-reload
+  398  systemctl daemon-reload 
+  399  systemctl restart docker
+  400  systemctl status docker
+  401  docker pull 192.168.10.160:5000/nginx
+  402  docker images
+  403  vim /etc/docker/daemon.json 
+  404  vi Dockerfile 
+  405  ls
+  406  cat Dockerfile 
+  407  docker build -t 192.168.10.160:5000/nginx:praveenkumv1 .
+  408  docker images
+  409  docker push 192.168.10.160:5000/nginx:praveenkumv1
+  410  ip a
+  411  docker ps
+  412  docker images
+  413  docker push 192.168.10.160:5000/nginx:prv1
+  414  kubectl get deployments praveenkum
+  415  kubectl describe deployments praveenkum
+  416  kubectl describe deployments praveenkum 
+  417  kubectl describe deployments praveenkum  | grep image
+  418  kubectl describe deployments praveenkum  
+  419  docker images
+  420  docker ger pods
+  421  docker get pods
+  422  kubectl get pods
+  423  kubectl get pods -o wide
+  424  kubectl describe pods -o wide
+  425  kubectl describe pods praveenkum
+  426  kubectl get pods praveenkum
+  427  kubectl describe deployments praveenkum  
+  428  kubectl describe deployments praveenkum | grep containers
+  429  kubectl describe deployments praveenkum | grep container
+  430  kubectl get deployments praveenkum -o wide
+  431  kubectl set image deployment/praveenkum nginx=192.168.10.168:5000/nginx:prv1
+  432  kubectl get svc
+  433  kubectl expose deployment praveenkum --type=loadBalancer --port=80
+  434  kubectl get deployments
+  435  kubectl expose deployment praveenkum --type=LoadBalancer --port=80
+  436  kubectl get svc
+  437  ls
+  438  cat abc.html 
+  439  docker images
+  440  docker push 192.168.10.160:5000/nginx:prv1
+  441  echo "# kubecicd" >> README.md
+  442  ls
+  443  mkdir case1 case2
+  444  ls
+  445  cd case1
+  446  git clone https://github.com/praveenenzoo/kubecicd
+  447  ls
+  448  cd kubecicd/
+  449  ls
+  450  ll
+  451  ll -al
+  452  cd ..
+  453  ls
+  454  cd ..
+  455  ls
+  456  cp -R abc.html  case1
+  457  cd case1
+  458  ls
+  459  cd ..
+  460  ls
+  461  cp -R Dockerfile abc.html case1/kubecicd/
+  462  cd case1
+  463  ls
+  464  rm -rf abc.html 
+  465  cd kubecicd/
+  466  ls
+  467  pwd
+  468  ls
+  469  ls -a
+  470  git status
+  471  git add Dockerfile abc.html 
+  472  git status
+  473  git commit -m "nginx:prv1"
+  474  git status
+  475  git push 
+  476  git push origin master
+  477  git log
+  478  git log | head -5 | tail -a | cut  -d" " -f5
+  479  git log | head -5 | tail -1 | cut  -d" " -f5
+  480  echo update2 v2 >xyz.html
+  481  ls
+  482  cd ../../case2/
+  483  git clone https://github.com/praveenenzoo/kubecicd
+  484  ls
+  485  cd kubecicd/
+  486  ls
+  487  pwd
+  488  cd ../../case1`
+  489  cd ../../case1
+  490  ls
+  491  cd kubecicd/
+  492  ls
+  493  git add .
+  494  git commit -m "nginx:prv2" .
+  495  git commit -m "nginx:prv2" 
+  496  git commit -m "nginx:prv2" .
+  497  git status
+  498  git commit -m "nginx:prv2" .
+  499  git commit -m origin master "nginx:prv2" .
+  500  git add origin master .
+  501  ls
+  502  pwd
+  503  ls
+  504  git add .
+  505  git commit -m "nginx:prv2" .
+  506  git push origin master
+  507  ls
+  508  vi Dockerfile 
+  509  git add .
+  510  git commit -m "nginx:prv3"
+  511  git push origin master
+  512  cd ../../case2
+  513  cd kubecicd/
+  514  ls
+  515  git pull
+  516  cat Dockerfile 
+  517  docker build -t 192.168.10.160:5000/nginx:prv3
+  518  docker build -t 192.168.10.160:5000/nginx:prv3 .
+  519  docker push 192.168.10.160:5000/nginx:prv3
+  520  docker images
+  521  kubectl get deployments
+  522  kubectl set image deploymen/praveenkum nginx=192.168.10.160:5000/nginx:prv3
+  523  kubectl set image deployment/praveenkum nginx=192.168.10.160:5000/nginx:prv3
+  524  kubectl get deployments
+  525  kubectl get svc
+  526  ls
+  527   cat xyz.html 
+  528  ip a
+  529  pwd
+  530  history
+  531  pwd
+  532  ls
+  533  vim auto_build.sh
+  534  chmod +x auto_build.sh 
+  535  ls
+  536  ll
+  537  bash auto_build.sh 
+  538  git log
+  539  git log | head -5 | tail -1 | cut -d" " -f5
+  540  vim auto_build.sh
+  541  bash auto_build.sh 
+  542  vim auto_build.sh
+  543  bash auto_build.sh 
+  544  vim auto_build.sh
+  545  bash auto_build.sh 
+  546  vim auto_build.sh
+  547  docker images
+  548  vim auto_build.sh
+  549  bash auto_build.sh 
+  550  vim auto_build.sh
+  551  docker rmi 192.168.10.160:5000/nginx:prv3
+  552  docker images
+  553  bash auto_build.sh 
+  554  vim auto_build.sh
+  555  bash auto_build.sh 
+  556  docker images
+  557  vim auto_build.sh
+  558  bash auto_build.sh 
+  559  vim auto_build.sh
+  560  bash auto_build.sh 
+  561  vim auto_build.sh
+  562  bash auto_build.sh 
+  563  vim auto_build.sh
+  564  bash auto_build.sh 
+  565  vim auto_build.sh
+  566  bash auto_build.sh 
+  567  vim auto_build.sh
+  568  bash auto_build.sh 
+  569  vim auto_build.sh
+  570  bash auto_build.sh 
+  571  cd ../../case1
+  572  pwd
+  573  cd kubecicd/
+  574  ls
+  575  ll
+  576  echo "thanks for today class" >final.html
+  577  ll
+  578  vim Dockerfile 
+  579  git add .
+  580  git commit -m "nginx:prv4"
+  581  git commit -m "nginx:prv4" .
+  582  git push
+  583  cd ../../case2
+  584  pwd
+  585  ll
+  586  cd kubecicd/
+  587  ll
+  588  bash auto_build.sh 
+  589  kubectl get pods
+  590  history
+================================
+# .bashrc
+
+# User specific aliases and functions
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+alias p="kubectl get pods"
+alias n="kubectl get nodes"
+alias s="kubectl get svc"
+alias d="kubectl get deployment"
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+source <(kubectl completion bash)
+JAVA_HOME=/usr/java/jdk1.8.0_121
+PATH=$JAVA_HOME/bin:$PATH
+export 
