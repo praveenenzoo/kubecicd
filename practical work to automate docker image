@@ -1,0 +1,262 @@
+Task = host 1 web page to open from outside from cluster
+if the developer changes the code then it will automattically change the webpage using dockerfile .
+
+requirement
+docker private registery server 
+kube master
+2 worker node
+git installad on worker & master node
+------------------------------------------------------------
+1. make a git repo then clone it on working directory
+2. create 2 webpage files and create one docker file
+3. then git add both files with tag version 1 and push to github 
+4. create a image using docker file use tag private register ip and port with version
+exapmle: docker pull nginx 
+
+# docker tag 881bd08c0b08 192.168.10.160:5000/nginx:latest
+
+then push this image to private registery 
+
+# docker push 192.168.10.160:5000/nginx:latest
+
+after that create a deployment using this image 
+
+# kubectl get deployments  # to check deployments 
+
+then create new deployment with that image which was earlier pushed in private registery
+
+#kubectl create deployment praveenkum --image=192.168.10.160:5000/nginx
+
+#kubectl get deployment  to check 
+
+to check more information about deployment 
+
+# kubectl get deployment -o wide
+
+
+to check ip address about deployment 
+
+# kubectl get deployment | grep praveenkum 
+# kubectl get deployment -o wide | grep praveenkum
+
+after check ip address keep curl request to webpage
+
+# curl 172.1624.1.39
+
+# after that create a directory 
+
+# cd /opt
+# mkdir praveen
+cd praveen 
+touch abc.html
+touch Dockerfile
+# configure private registery server on this pc
+vim /etc/docker/daemon.json 
+
+add this line 
+ 
+ {"insecure-registries" : ["192.168.10.160:5000"]}
+
+and save file
+
+
+then add line on dockerfile
+
+# vi Dockerfile 
+
+FROM 192.168.10.160:5000/nginx
+COPY abc.html /usr/share/nginx/html
+EXPOSE 80
+
+Build image using dockerfile
+
+# docker build -t 192.168.10.160:5000/nginx:praveenkumv1 .
+
+# docker images check images which was we  are created 
+
+
+then push this image to docker registery 
+
+#docker push 192.168.10.160:5000/nginx:praveenkumv1   ##with version nage v1
+
+
+push this image to docker registery server 
+
+#  docker push 192.168.10.160:5000/nginx:prv1
+
+#  kubectl get deployments praveenkum
+
+
+to check image version v1 or which image are still working with our deployment
+# kubectl describe deployments praveenkum | grep image
+
+
+# kubectl describe deployments praveenkum
+
+when our deployment was created sucessfuly it create a pod 
+to check the pod
+
+# kubectl get pods     
+
+# kubectl get pods -o wide  to check ip address and the curl this ip with port if it works fine then deployment is working fine.
+
+# kubectl describe pods -o wide
+# kubectl describe pods praveenkum
+# kubectl get pods praveenkum
+
+# kubectl describe deployments praveenkum 
+
+to check container name 
+# kubectl describe deployments praveenkum | grep container 
+
+# kubectl get deployments praveenkum -o wide
+
+if our code is working fine then edit you website code and again make dockerfile and give tag to v2 and push it to private registery server 
+
+# kubectl set image deployment/praveenkum nginx=192.168.10.168:5000/nginx:prv1
+
+
+check service 
+# kubectl get svc
+
+to create a service to open this website on outside using loadbalancer
+
+# kubectl expose deployment praveenkum --type=loadBalancer --port=80
+ 
+# kubectl get deployments
+
+# cat abc.html 
+docker images
+================================================
+docker push 192.168.10.160:5000/nginx:prv1
+==============================GIT work start create a project on github name kubecicd ========================
+then create 2 case direcory 
+
+mkdir case1 case2
+ 
+cd case1 
+git clone https://github.com/praveenenzoo/kubecicd
+cd kubecicd/
+cd ..
+cp -R abc.html case1
+
+cp -R Dockerfile abc.html case1/kubecicd/
+
+git status
+git add Dockerfile abc.html 
+ git status
+  git commit -m "nginx:prv1"
+  git status
+  git push 
+  git push origin master
+  git log            #####to check latest commit tag name
+
+Check tag name 
+
+
+git log | head -5 | tail -a | cut -d" " -f5
+
+then change on webpahe write any works or change page info or add new page  
+
+echo update2 v2 >xyz.html
+
+then go to case 2
+
+cd ../../case2/
+git clone https://github.com/praveenenzoo/kubecicd
+
+cd kubecicd/
+cd ../../case1`
+
+cd kubecicd/
+git add .
+
+git commit -m "nginx:prv2" .
+git commit -m origin master "nginx:prv2" .
+
+git add origin master .
+
+vi Dockerfile 
+
+to copy another page which was create earlier 
+
+git add .
+ git commit -m "nginx:prv3"
+ git push origin master
+ cd ../../case2
+ cd kubecicd/
+
+ git pull
+
+
+then build it to new version 
+
+# docker build -t 192.168.10.160:5000/nginx:prv3 .
+
+and push it to docker registery server 
+
+# docker push 192.168.10.160:5000/nginx:prv3
+
+
+docker images
+
+
+kubectl get deployments
+
+------------when we change on code after that we have create new docker images and push to registery server and then chnage the image of deployment 
+
+# kubectl set image deployment/praveenkum nginx=192.168.10.160:5000/nginx:prv3
+
+then check image are change or not 
+then check again container ip and check curl it and check the change of code
+
+kubectl get deployments -o wide 
+
+curl ip adeess
+
+kubectl get svc
+
+
+if everything is working fine then write a script to auto mate this work
+
+vim auto_build.sh
+
+
+[root@station147 kubecicd]# cat auto_build.sh 
+#!/bin/bash
+#fetching latest update from github
+git pull 
+
+##getting latest commit tag
+
+get_commit=`git log | head -5 | tail -1 | cut -d" " -f5`
+echo $get_commit
+
+# now create docker image by using the upper tag
+
+docker build -t 192.168.10.160:5000/$get_commit .
+
+#now push image to docker private registery 
+docker push 192.168.10.160:5000/$get_commit
+
+# setting some time out
+
+echo "please wait image is being pushed to docker Registry..>>" sleep 5
+
+# now updating kuberbities deployment image
+
+echo "updating your deployment image ---@@@@"
+echo "please wait for we are about to list your all deployments:-->> "
+sleep 2
+# command to get deployment
+kubectl get deployment | cut -d" " -f1 
+echo "please enter your deployment name: "
+read get_dep; 
+
+echo "thanks for choosing deployment:--- $get_dep"
+
+##finally updating deployment
+
+kubectl set image deployment/$get_dep nginx=192.168.10.160:5000/$get_commit
+
+[root@station147 kubecicd]# 
