@@ -1,3 +1,10 @@
+add line 
+kubectl edit service service name
+chnage Type that service 
+
+Type:NodePort
+
+
 Task = host 1 web page to open from outside from cluster
 if the developer changes the code then it will automattically change the webpage using dockerfile .
 
