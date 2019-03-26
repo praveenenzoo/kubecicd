@@ -1,0 +1,457 @@
+[root@master kubeproject]# git clone https://github.com/mdn/beginner-html-site-styled.git case1
+Cloning into 'case1'...
+remote: Enumerating objects: 8, done.
+remote: Counting objects: 100% (8/8), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 37 (delta 0), reused 5 (delta 0), pack-reused 29
+Unpacking objects: 100% (37/37), done.
+[root@master kubeproject]# git clone https://github.com/Microsoft/project-html-website.git case1
+fatal: destination path 'case1' already exists and is not an empty directory.
+[root@master kubeproject]# git clone https://github.com/Microsoft/project-html-website.git case2
+Cloning into 'case2'...
+remote: Enumerating objects: 19, done.
+remote: Total 19 (delta 0), reused 0 (delta 0), pack-reused 19
+Unpacking objects: 100% (19/19), done.
+[root@master kubeproject]# ls
+case1  case2
+[root@master kubeproject]# cd case
+-bash: cd: case: No such file or directory
+[root@master kubeproject]# cd case1/
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  images  index.html  LICENSE  README.md  styles
+[root@master case1]# cd ..
+[root@master kubeproject]# ls
+case1  case2
+[root@master kubeproject]# cd case1/
+[root@master case1]# vi Dockerfile
+[root@master case1]# docker build -t case1 .
+Sending build context to Docker daemon 291.8 kB
+Step 1/3 : FROM nginx
+Trying to pull repository docker.io/library/nginx ... 
+latest: Pulling from docker.io/library/nginx
+f7e2b70d04ae: Pull complete 
+08dd01e3f3ac: Pull complete 
+d9ef3a1eb792: Pull complete 
+Digest: sha256:98efe605f61725fd817ea69521b0eeb32bef007af0e3d0aeb6258c6e6fe7fc1a
+Status: Downloaded newer image for docker.io/nginx:latest
+ ---> 881bd08c0b08
+Step 2/3 : COPY . /usr/share/nginx/share
+ ---> cfcc5e42d52e
+Removing intermediate container 566f12a90d1d
+Step 3/3 : EXPOSE 80
+ ---> Running in 70c371bd703c
+ ---> 76c110c9db42
+Removing intermediate container 70c371bd703c
+Successfully built 76c110c9db42
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# cd ..
+[root@master kubeproject]# ls
+case1  case2
+[root@master kubeproject]# cd case
+-bash: cd: case: No such file or directory
+[root@master kubeproject]# cd case1/
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# docker images
+REPOSITORY                           TAG                 IMAGE ID            CREATED              SIZE
+case1                                latest              76c110c9db42        About a minute ago   109 MB
+docker.io/calico/node                v3.3.5              bb99d0ff0392        2 weeks ago          75.3 MB
+docker.io/calico/cni                 v3.3.5              f483500b7715        2 weeks ago          75.4 MB
+docker.io/nginx                      latest              881bd08c0b08        2 weeks ago          109 MB
+k8s.gcr.io/kube-proxy                v1.12.6             211cc719d4d6        3 weeks ago          96.5 MB
+k8s.gcr.io/kube-controller-manager   v1.12.6             473237e54d99        3 weeks ago          164 MB
+k8s.gcr.io/kube-apiserver            v1.12.6             97d5a4fe6d07        3 weeks ago          194 MB
+k8s.gcr.io/kube-scheduler            v1.12.6             f6116fc392fd        3 weeks ago          58.4 MB
+docker.io/hello-world                latest              fce289e99eb9        2 months ago         1.84 kB
+registry:5000/hwmaster               latest              fce289e99eb9        2 months ago         1.84 kB
+k8s.gcr.io/etcd                      3.2.24              3cab8e1b9802        6 months ago         220 MB
+k8s.gcr.io/coredns                   1.2.2               367cdc8433a4        6 months ago         39.2 MB
+k8s.gcr.io/pause                     3.1                 da86e6ba6ca1        15 months ago        742 kB
+[root@master case1]# docker tag case1 registry:5000/case1
+[root@master case1]# docker push registry:5000/case1
+The push refers to a repository [registry:5000/case1]
+dec2e9f83eef: Pushed 
+3e9eb35b1c23: Pushed 
+c59b3ca455e3: Pushed 
+6744ca1b1190: Pushed 
+latest: digest: sha256:56ab845ec05206b548521b6cb5d1242da142ae70bcf21f9df3376eb444720b0a size: 1158
+[root@master case1]# kubectl create deployment case1 --image=registry:5000/case1
+[root@master case1]# kubectl create deployment case1 --image=registry:5000/case1
+deployment.apps/case1 created
+[root@master case1]# kubectl get deployment
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+case1   1         1         1            0           7s
+[root@master case1]# kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+case1-86f66c46c8-lhmkt   1/1     Running   0          14s
+[root@master case1]# kubectl get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE   IP           NODE                NOMINATED NODE
+case1-86f66c46c8-lhmkt   1/1     Running   0          21s   172.24.2.2   node2.example.com   <none>
+[root@master case1]# curl 172.24.2.2
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+[root@master case1]# kubectl create service case1 --type=NodePort
+Error: unknown flag: --type
+
+
+Aliases:
+service, svc
+
+Available Commands:
+  clusterip    Create a ClusterIP service.
+  externalname Create an ExternalName service.
+  loadbalancer Create a LoadBalancer service.
+  nodeport     Create a NodePort service.
+
+Usage:
+  kubectl create service [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+
+unknown flag: --type
+[root@master case1]# kubectl create service case1 --type=nodeport
+Error: unknown flag: --type
+
+
+Aliases:
+service, svc
+
+Available Commands:
+  clusterip    Create a ClusterIP service.
+  externalname Create an ExternalName service.
+  loadbalancer Create a LoadBalancer service.
+  nodeport     Create a NodePort service.
+
+Usage:
+  kubectl create service [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+
+unknown flag: --type
+[root@master case1]# kubectl create service case1 nodeport
+error: unknown command "case1 nodeport"
+See 'kubectl create service -h' for help and examples.
+[root@master case1]# kubectl create service nodeport case1
+[root@master case1]# kubectl create service nodeport case1
+error: at least one tcp port specifier must be provided
+[root@master case1]# kubectl create service nodeport case1 --port=80
+Error: unknown flag: --port
+
+
+Examples:
+  # Create a new NodePort service named my-ns
+  kubectl create service nodeport my-ns --tcp=5678:8080
+
+Options:
+      --allow-missing-template-keys=true: If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.
+      --dry-run=false: If true, only print the object that would be sent, without sending it.
+      --generator='service-nodeport/v1': The name of the API generator to use.
+      --node-port=0: Port used to expose the service on each node in a cluster.
+  -o, --output='': Output format. One of: json|yaml|name|templatefile|template|go-template|go-template-file|jsonpath|jsonpath-file.
+      --save-config=false: If true, the configuration of current object will be saved in its annotation. Otherwise, the annotation will be unchanged. This flag is useful when you want to perform kubectl apply on this object in the future.
+      --tcp=[]: Port pairs can be specified as '<port>:<targetPort>'.
+      --template='': Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
+      --validate=true: If true, use a schema to validate the input before sending it
+
+Usage:
+  kubectl create service nodeport NAME [--tcp=port:targetPort] [--dry-run] [options]
+
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+
+unknown flag: --port
+[root@master case1]# kubectl create service nodeport case1 --tcp=80
+service/case1 created
+[root@master case1]# kubectl get deployments.
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+case1   1         1         1            1           4m1s
+[root@master case1]# kubectl get deployments
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+case1   1         1         1            1           4m3s
+[root@master case1]# kubectl edit deployments case1
+Edit cancelled, no changes made.
+[root@master case1]# kubectl edit service case1
+Edit cancelled, no changes made.
+[root@master case1]# kubectl get service
+
+
+
+
+
+
+[root@master case1]# kubectl get service
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+case1        NodePort    10.106.227.44   <none>        80:30962/TCP   2m10s
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        14h
+[root@master case1]# kubectl get node
+NAME                 STATUS   ROLES    AGE   VERSION
+master.example.com   Ready    master   14h   v1.12.2
+node1.example.com    Ready    <none>   14h   v1.12.2
+node2.example.com    Ready    <none>   14h   v1.12.2
+[root@master case1]# ping master.exaplme.com
+ping: master.exaplme.com: Name or service not known
+[root@master case1]# ping master.example.com
+PING master (192.168.10.164) 56(84) bytes of data.
+64 bytes from master (192.168.10.164): icmp_seq=1 ttl=64 time=0.059 ms
+64 bytes from master (192.168.10.164): icmp_seq=2 ttl=64 time=0.050 ms
+^C
+--- master ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.050/0.054/0.059/0.008 ms
+[root@master case1]# ping node1.example.com
+PING node1 (192.168.10.149) 56(84) bytes of data.
+64 bytes from node1 (192.168.10.149): icmp_seq=1 ttl=64 time=0.310 ms
+64 bytes from node1 (192.168.10.149): icmp_seq=2 ttl=64 time=0.386 ms
+^C
+--- node1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1000ms
+rtt min/avg/max/mdev = 0.310/0.348/0.386/0.038 ms
+[root@master case1]# ping node2.example.com
+PING node2 (192.168.10.139) 56(84) bytes of data.
+64 bytes from node2 (192.168.10.139): icmp_seq=1 ttl=64 time=0.237 ms
+64 bytes from node2 (192.168.10.139): icmp_seq=2 ttl=64 time=0.319 ms
+^C
+--- node2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 999ms
+rtt min/avg/max/mdev = 0.237/0.278/0.319/0.041 ms
+[root@master case1]# kubectl get pods
+NAME                     READY   STATUS    RESTARTS   AGE
+case1-86f66c46c8-lhmkt   1/1     Running   0          8m30s
+[root@master case1]# kubectl get pods -o wide
+NAME                     READY   STATUS    RESTARTS   AGE     IP           NODE                NOMINATED NODE
+case1-86f66c46c8-lhmkt   1/1     Running   0          8m33s   172.24.2.2   node2.example.com   <none>
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# d
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+case1   1         1         1            1           9m14s
+[root@master case1]# d -o wide
+NAME    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                SELECTOR
+case1   1         1         1            1           9m20s   case1        registry:5000/case1   app=case1
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# vim Dockerfile 
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# p
+NAME                     READY   STATUS    RESTARTS   AGE
+case1-86f66c46c8-lhmkt   1/1     Running   0          9m41s
+[root@master case1]# kubectl exec -it case1-86f66c46c8-lhmkt 
+error: expected 'exec POD_NAME COMMAND [ARG1] [ARG2] ... [ARGN]'.
+POD_NAME and COMMAND are required arguments for the exec command
+See 'kubectl exec -h' for help and examples.
+[root@master case1]# kubectl exec -it case1-86f66c46c8-lhmkt  bash
+root@case1-86f66c46c8-lhmkt:/# cd /usr/share/nginx/html/
+root@case1-86f66c46c8-lhmkt:/usr/share/nginx/html# l
+bash: l: command not found
+root@case1-86f66c46c8-lhmkt:/usr/share/nginx/html# ls
+50x.html  index.html
+root@case1-86f66c46c8-lhmkt:/usr/share/nginx/html# cat index.html 
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+root@case1-86f66c46c8-lhmkt:/usr/share/nginx/html# cd
+root@case1-86f66c46c8-lhmkt:~# exit
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# vim Dockerfile 
+[root@master case1]# mkdir content
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  content  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# mv . content/
+mv: overwrite ‘content/.’? y
+mv: cannot move ‘.’ to ‘content/.’: Device or resource busy
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  content  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# cd content/
+[root@master content]# ls
+[root@master content]# cd ..
+[root@master case1]# ls
+CODE_OF_CONDUCT.md  content  Dockerfile  images  index.html  LICENSE  README.md  styles
+[root@master case1]# mv -r . content/
+mv: invalid option -- 'r'
+Try 'mv --help' for more information.
+[root@master case1]# mv -r . content/cd  cd
+mv: invalid option -- 'r'
+Try 'mv --help' for more information.
+[root@master case1]# cd ..
+[root@master kubeproject]# rm -f case1/ case1
+rm: cannot remove ‘case1/’: Is a directory
+rm: cannot remove ‘case1’: Is a directory
+[root@master kubeproject]# rm -f case1/ case2
+rm: cannot remove ‘case1/’: Is a directory
+rm: cannot remove ‘case2’: Is a directory
+[root@master kubeproject]# ls
+case1  case2
+[root@master kubeproject]# rm -rf *
+[root@master kubeproject]# ls
+[root@master kubeproject]# mkdir case1 case2 
+[root@master kubeproject]# cd case1
+[root@master case1]# git clone https://github.com/mdn/beginner-html-site-styled.git web1
+Cloning into 'web1'...
+remote: Enumerating objects: 8, done.
+remote: Counting objects: 100% (8/8), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 37 (delta 0), reused 5 (delta 0), pack-reused 29
+Unpacking objects: 100% (37/37), done.
+[root@master case1]# cd ../..
+[root@master ~]# kls\
+> ^C
+[root@master ~]# ls
+anaconda-ks.cfg  kubeproject  mayank
+[root@master ~]# cd kubeproject/
+[root@master kubeproject]# cd case2
+[root@master case2]# git clone https://github.com/Microsoft/project-html-website.git web2
+Cloning into 'web2'...
+remote: Enumerating objects: 19, done.
+remote: Total 19 (delta 0), reused 0 (delta 0), pack-reused 19
+Unpacking objects: 100% (19/19), done.
+[root@master case2]# cd ..
+[root@master kubeproject]# cd case1
+[root@master case1]# ls
+web1
+[root@master case1]# vi Dockerfile
+[root@master case1]# docker build -t web1 .
+Sending build context to Docker daemon 292.4 kB
+Step 1/3 : FROM nginx
+ ---> 881bd08c0b08
+Step 2/3 : COPY web1 /usr/share/nginx/html/
+ ---> e0a918ca19d9
+Removing intermediate container 31afcef22453
+Step 3/3 : EXPOSE 80
+ ---> Running in 55f6ea57d6a1
+ ---> 0524010a66ef
+Removing intermediate container 55f6ea57d6a1
+Successfully built 0524010a66ef
+[root@master case1]# docker tag web1 registry:5000/web1
+[root@master case1]# docker push 
+case1                                       k8s.gcr.io/coredns:1.2.2                    k8s.gcr.io/pause
+case1:latest                                k8s.gcr.io/etcd                             k8s.gcr.io/pause:3.1
+docker.io/calico/cni                        k8s.gcr.io/etcd:3.2.24                      registry:5000/case1
+docker.io/calico/cni:v3.3.5                 k8s.gcr.io/kube-apiserver                   registry:5000/case1:latest
+docker.io/calico/node                       k8s.gcr.io/kube-apiserver:v1.12.6           registry:5000/hwmaster
+docker.io/calico/node:v3.3.5                k8s.gcr.io/kube-controller-manager          registry:5000/hwmaster:latest
+docker.io/hello-world                       k8s.gcr.io/kube-controller-manager:v1.12.6  registry:5000/web1
+docker.io/hello-world:latest                k8s.gcr.io/kube-proxy                       registry:5000/web1:latest
+docker.io/nginx                             k8s.gcr.io/kube-proxy:v1.12.6               web1
+docker.io/nginx:latest                      k8s.gcr.io/kube-scheduler                   web1:latest
+k8s.gcr.io/coredns                          k8s.gcr.io/kube-scheduler:v1.12.6           
+[root@master case1]# docker push 
+case1                                       k8s.gcr.io/coredns:1.2.2                    k8s.gcr.io/pause
+case1:latest                                k8s.gcr.io/etcd                             k8s.gcr.io/pause:3.1
+docker.io/calico/cni                        k8s.gcr.io/etcd:3.2.24                      registry:5000/case1
+docker.io/calico/cni:v3.3.5                 k8s.gcr.io/kube-apiserver                   registry:5000/case1:latest
+docker.io/calico/node                       k8s.gcr.io/kube-apiserver:v1.12.6           registry:5000/hwmaster
+docker.io/calico/node:v3.3.5                k8s.gcr.io/kube-controller-manager          registry:5000/hwmaster:latest
+docker.io/hello-world                       k8s.gcr.io/kube-controller-manager:v1.12.6  registry:5000/web1
+docker.io/hello-world:latest                k8s.gcr.io/kube-proxy                       registry:5000/web1:latest
+docker.io/nginx                             k8s.gcr.io/kube-proxy:v1.12.6               web1
+docker.io/nginx:latest                      k8s.gcr.io/kube-scheduler                   web1:latest
+k8s.gcr.io/coredns                          k8s.gcr.io/kube-scheduler:v1.12.6           
+[root@master case1]# docker push 
+case1                                       k8s.gcr.io/coredns:1.2.2                    k8s.gcr.io/pause
+case1:latest                                k8s.gcr.io/etcd                             k8s.gcr.io/pause:3.1
+docker.io/calico/cni                        k8s.gcr.io/etcd:3.2.24                      registry:5000/case1
+docker.io/calico/cni:v3.3.5                 k8s.gcr.io/kube-apiserver                   registry:5000/case1:latest
+docker.io/calico/node                       k8s.gcr.io/kube-apiserver:v1.12.6           registry:5000/hwmaster
+docker.io/calico/node:v3.3.5                k8s.gcr.io/kube-controller-manager          registry:5000/hwmaster:latest
+docker.io/hello-world                       k8s.gcr.io/kube-controller-manager:v1.12.6  registry:5000/web1
+docker.io/hello-world:latest                k8s.gcr.io/kube-proxy                       registry:5000/web1:latest
+docker.io/nginx                             k8s.gcr.io/kube-proxy:v1.12.6               web1
+docker.io/nginx:latest                      k8s.gcr.io/kube-scheduler                   web1:latest
+k8s.gcr.io/coredns                          k8s.gcr.io/kube-scheduler:v1.12.6           
+[root@master case1]# docker push registry:5000/web1
+[root@master case1]# docker push registry:5000/web1
+The push refers to a repository [registry:5000/web1]
+2305c23012ef: Pushed 
+3e9eb35b1c23: Mounted from case1 
+c59b3ca455e3: Mounted from case1 
+6744ca1b1190: Mounted from case1 
+latest: digest: sha256:0068c9408ef409a323613239b3c6c7ccaeb94cd3b5e53653fc6356e92521f3b9 size: 1158
+[root@master case1]# kubectl create deployment web1 --image=registry:5000/web1
+deployment.apps/web1 created
+[root@master case1]# kubectl get deployments.
+NAME   DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+web1   1         1         1            1           8s
+[root@master case1]# kubectl get pods -o wide
+NAME                  READY   STATUS    RESTARTS   AGE   IP           NODE                NOMINATED NODE
+web1-8bc4c8f4-mzbn2   1/1     Running   0          16s   172.24.2.3   node2.example.com   <none>
+[root@master case1]# kubectl create service nodeport web1
+error: at least one tcp port specifier must be provided
+[root@master case1]# kubectl create service nodeport web1 --tcp=80
+service/web1 created
+[root@master case1]# kubectl get service 
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP        14h
+web1         NodePort    10.110.61.132   <none>        80:32735/TCP   8s
+[root@master case1]# ls
+Dockerfile  web1
+[root@master case1]# cd web1/
+[root@master web1]# ls
+CODE_OF_CONDUCT.md  images  index.html  LICENSE  README.md  styles
+[root@master web1]# vi index.html 
+[root@master web1]# vi index.html 
+[root@master web1]# ls
+CODE_OF_CONDUCT.md  images  index.html  LICENSE  README.md  styles
+[root@master web1]# cd ..
+[root@master case1]# docker build -t web1:v1 .
+Sending build context to Docker daemon 292.4 kB
+Step 1/3 : FROM nginx
+ ---> 881bd08c0b08
+Step 2/3 : COPY web1 /usr/share/nginx/html/
+ ---> 6471435f167b
+Removing intermediate container eba0532ac18d
+Step 3/3 : EXPOSE 80
+ ---> Running in 59b555a4b29d
+ ---> 139ca6bace81
+Removing intermediate container 59b555a4b29d
+Successfully built 139ca6bace81
+[root@master case1]# docker tag web1:v1 registry:5000/web1:v1
+[root@master case1]# docker push 
