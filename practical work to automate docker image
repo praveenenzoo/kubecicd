@@ -267,3 +267,57 @@ echo "thanks for choosing deployment:--- $get_dep"
 kubectl set image deployment/$get_dep nginx=192.168.10.160:5000/$get_commit
 
 [root@station147 kubecicd]# 
+=========================================================
+============================================================
+==============================================================
+==============================================================
+Task To Automate docker images (website auto chnage docker images when last commit on  git)automattically using git and jenkins 
+[Need software requirement for this task]
+ Kubernetes master | 2 Kubernetes node | Git Private Registry | 
+ kubernetes,docker,git installed on client coputers
+ kubernetes,docker,git, jenkins,ansible installed on kubernetes master.
+
+=========Steps to follow===========
+1.) create 2 repo's in github.com project1 project2 and clone this repo on your local server
+ 2.) make Dockerfile under project1 and build new docker image 
+ docker build -t web1 .
+ 3.) clone project 2 and alsoe create Dockerfile under project2 also.
+ docker build -t web2 .
+ docker tag and push to docker private registry server with v1 on with projects. project1 & project2.
+ 4.) 
+
+ 5.) create kubernetes deployment now.
+
+ 6.) both projects git comments and git push
+ 7.) user jenkins for auto ci/cd
+-----------------------------------
+docker pull nginx 
+ docker tag 881bd08c0b08 192.168.10.160:5000/nginx:latest
+ docker push 192.168.10.160:5000/nginx:latest
+ kubectl get deployments
+ kubectl create deployment praveenkum --image=192.168.10.160:5000/nginx
+ kubectl get deployment
+ kubectl get deployment -o wide
+ kubectl expose deployment praveenkum --type=loadBalancer --port=80
+
+to check ip address about deployment 
+ kubectl get deployment | grep praveenkum 
+ kubectl get deployment -o wide | grep praveenkum
+ curl 172.1624.1.39
+ kubectl expose deployment praveenkum --type=loadBalancer --port=80
+ 
+after that create a directory 
+ cd /opt
+ mkdir praveen
+ cd praveen
+ vi abc.html
+ vi Dockerfile
+ 
+FROM 192.168.10.160:5000/nginx
+COPY abc.html /usr/share/nginx/html
+EXPOSE 80
+
+docker build -t 192.168.10.160:5000/nginx:praveenkumv1 .
+docker push 192.168.10.160:5000/nginx:praveenkumv1  
+
+
