@@ -1,0 +1,136 @@
+
+kubectl edit svc praveen ## edit service to LoadBalancer 
+-------------------------------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: 2019-04-06T06:01:45Z
+  labels:
+    app: praveen
+  name: praveen
+  namespace: default
+  resourceVersion: "2885"
+  selfLink: /api/v1/namespaces/default/services/praveen
+  uid: 7539ee30-5831-11e9-acbe-5254008e87bf
+spec:
+  clusterIP: 10.105.129.58
+  externalTrafficPolicy: Cluster
+  ports:
+  - nodePort: 32023
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: praveen
+  sessionAffinity: None
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+~                                                                                                        
+~            -------------------------------------------------------------------------
+
+yum  install nfs-utils -y ## install nfs clinet for all nodes
+kubectl  get  pv
+kubectl  get  pvc
+kubectl scale  deployment praveen --replicas=1
+kubectl  get  pods
+
+vim pv.yml
+----------------------------------------
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+ name: pvvol-1
+
+spec:
+ capacity:
+  storage: 100Mi
+ accessModes:
+  - ReadWriteMany
+ persistentVolumeReclaimPolicy: Retain
+ nfs:
+  path: /oc/matrics    ######shared storage server location
+  server: 192.168.10.254 ##shared storage server ip address
+  readOnly: false
+kubect	      
+------------------------------------------------------
+kubectl create  -f pv.yml
+
+
+showmount -e  192.168.10.254   # now check mount
+mount  192.168.10.254:/oc/matrics  /mnt/   ##mount on local system
+
+ 
+
+kubectl get pv ## to check pv
+## create pvc pvc.yaml file to claim the space and us this space on pods/containers/deployment
+
+vim pvc.yml
+--------------------------------------
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: pvc-one
+
+spec:
+ accessModes:
+  - ReadWriteMany
+ resources:
+  requests:
+   storage: 50Mi
+
+----------------------------------------------------------
+kubectl create  -f  pvc.yml
+kubectl get pvc
+kubectl get pv
+
+
+############now create a pod with claim pvc storage 
+vim   podswithlael.yml
+------------------------------------------
+---
+apiVersion: v1
+kind: Pod
+metadata:
+ name: firstpod
+ labels:
+  type: app1
+
+spec:
+ volumes:
+  - name: vol1   # this name can be any thing 
+    persistentVolumeClaim:
+     claimName: pvc-one  # same as pvc
+ containers:
+  - name: cont1
+    image: nginx
+    ports:
+     - containerPort: 80
+    imagePullPolicy: IfNotPresent
+    volumeMounts:
+     - mountPath: /usr/share/nginx/html
+       name: vol1  # same as above section under volume 
+
+---------------------------------------------------------
+kubectl create  -f podswithlael.yml 
+
+
+ 
+ 5  kubectl create  -f podswithlael.yml 
+   76  kubectl get pods
+   77  kubectl get pods -o wide
+   78  curl http://172.24.1.7
+   79  kubectl exec -it  pods  firstpod  bash 
+   80  kubectl exec -it   firstpod  bash 
+   81  history 
+   82  mount  192.168.10.254:/oc/matrics  /mnt/
+   83  cd  /mnt/
+   84  ls
+   85  echo hello >index.html 
+   86  echo hii >abc.html 
+   87  kubectl exec -it   firstpod  bash 
+   88  curl http://172.24.1.7
+   89  curl http://172.24.1.7/abc.html
+   90  history 
+
