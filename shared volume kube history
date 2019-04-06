@@ -1,0 +1,91 @@
+    1  kubectl get nodes
+    2  kubectl   create  deployment  praveen --image=nginx 
+    3  kubectl get pods
+    4  kubectl get pods -o wide
+    5  curl http:// 172.24.2.2
+    6  kubectl get  svc
+    7  kubectl expose deployment  praveen  --port=80 
+    8  kubectl get svc
+    9  curl  http://10.105.129.58
+   10  kubectl get  svc
+   11  kubectl edit  svc  praveen  
+   12  kubectl get  svc
+   13  ifconfig 
+   14  kubectl get  svc
+   15  kubectl get pods
+   16  kubectl get deployments
+   17  kubectl scale deployment  praveen  --replicas=5
+   18  kubectl get deployments
+   19  kubectl get pods
+   20  kubectl get deployments
+   21  kubectl get pods
+   22  kubectl exec pods praveen-6cb686f97c-hxfxz   bash 
+   23  kubectl exec  praveen-6cb686f97c-hxfxz   bash 
+   24  kubectl exec  -it praveen-6cb686f97c-hxfxz   bash 
+   25  kubectl get svc
+   26  kubectl edit svc praveen  
+   27  kubectl get svc
+   28  yum  install nfs-utils -y
+   29  kubectl  get  pv
+   30  kubectl  get  pvc
+   31  kubectl scale  deployment praveen --replicas=1
+   32  kubectl  get  pods
+   33  vim   pv.yml
+   34  showmount -e  192.168.10.254
+   35  mount  192.168.10.254:/oc/matrics  /mnt/
+   36  umount /mnt/
+   37  vim   pv.yml
+   38  kubectl create  -f pv.yml 
+   39  kubectl get pv
+   40  vim pvc.yml
+   41  history 
+   42  vim pv.yml 
+   43  kubectl get pv
+   44  vim pvc.yml 
+   45  kubectl create  -f  pvc.yml 
+   46  kubectl get pvc
+   47  kubectl get pv
+
+   48  kubectl get pvc
+   49  kubectl edit   deployments  praveen 
+   50  kubectl edit   pods  praveen 
+   51  kubectl edit   pods  praveen-6cb686f97c-v9kqw 
+   52  vim  pods_pvcuse.yml
+   53  kubectl get pvc
+   54  vim  pods_pvcuse.yml
+   55  kubectl create  -f  pods_pvcuse.yml 
+   56  kubectl get pods
+   57  kubectl describe  pods  nfsclaimpod 
+   58  kubectl  get pods -o wide
+   59  cat /etc/hosts
+   60  ssh node1
+   61  ssh node2
+   62  kubectl  get pods -o wide
+   63  kubectl  expose pod  nfsclaimpod   --port=80  --type=NodePort
+   64  kubectl  expose pod  nfsclaimpod   --port=80  
+   65  kubectl get pods 
+   66  kubectl get pods  --show-labels 
+   67  kubectl delete  pods  nfsclaimpod 
+   68  kubectl get pods  
+   69  kubectl edit pods praveen-6cb686f97c-v9kqw 
+   70  ls
+   71  vim   podswithlael.yml
+   72  ls
+   73  cat  pods_pvcuse.yml 
+   74  vim   podswithlael.yml
+   75  kubectl create  -f podswithlael.yml 
+   76  kubectl get pods
+   77  kubectl get pods -o wide
+   78  curl http://172.24.1.7
+   79  kubectl exec -it  pods  firstpod  bash 
+   80  kubectl exec -it   firstpod  bash 
+   81  history 
+   82  mount  192.168.10.254:/oc/matrics  /mnt/
+   83  cd  /mnt/
+   84  ls
+   85  echo hello >index.html 
+   86  echo hii >abc.html 
+   87  kubectl exec -it   firstpod  bash 
+   88  curl http://172.24.1.7
+   89  curl http://172.24.1.7/abc.html
+   90  history -------------------
